@@ -16,7 +16,7 @@ datasource db {
 model Website {
   id        String        @id @default(cuid())
   url       String
-  timeAdded DateTime
+  timeAdded DateTime      @default(now())
   ticks     WebsiteTick[]
 }
 
