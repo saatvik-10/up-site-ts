@@ -11,6 +11,8 @@ route.post("/website", async (req, res) => {
 
     const website = await db.website.create({
         data: {
+            //@ts-ignore
+            user_id: req.userId,
             url: req.body.url
         }
     })
