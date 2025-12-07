@@ -23,7 +23,7 @@ model user {
 model website {
   id        String         @id @default(cuid())
   url       String
-  timeAdded DateTime       @default(now())
+  time_added DateTime       @default(now())
   ticks     website_tick[]
   user_id   String
   user      user           @relation(fields: [user_id], references: [id])
