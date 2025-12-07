@@ -28,6 +28,10 @@ route.post("/user/sign-up", async (req, res) => {
             id: newUser.id
         })
     } catch (err: any) {
+        console.log(err)
+        if (err.code == "P2002") {
+            return res.status(409).send("Username already exists!")
+        }
         res.status(500).send("Server Err!");
     }
 })
@@ -50,7 +54,7 @@ route.post("/user/sign-in", async (req, res) => {
         return;
     }
 
-    const valid = await bcrypt.compare(user.password, data.data.password)
+    const valid = await bcrypt.compare(data.data.password, user.password)
 
     if (!valid) {
         res.status(401).send("Username or Password is wrong!");
@@ -59,8 +63,11 @@ route.post("/user/sign-in", async (req, res) => {
 
     jwtAuth({ sub: user.id, res })
 
-    return res.status(201).send(
-        "User logged in successfully!"
+    return res.status(201).json(
+        {
+            id: user.id,
+            message: "User Logged In Successfully!"
+        }
     )
 })
 
