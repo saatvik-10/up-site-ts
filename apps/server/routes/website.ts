@@ -22,6 +22,8 @@ route.post("/website", async (req, res) => {
     })
 })
 
-// route.get("/status/:websiteId")
+route.get("/status/:websiteId", (req, res) => {
+   
+})
 
 export default route
