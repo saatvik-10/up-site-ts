@@ -2,7 +2,7 @@ import { Router } from "express";
 import { db } from "db/client"
 import { AuthInput } from "../validator/user.validator";
 import bcrypt from 'bcrypt'
-import { jwtAuth } from "../utils/jwt";
+import { jwtAuth } from "../utils/jwtAuth";
 
 const route = Router()
 
