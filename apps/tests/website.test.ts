@@ -1,14 +1,39 @@
-import { describe, it, expect } from 'bun:test'
+import { describe, it, expect, beforeAll } from 'bun:test'
 import axios from 'axios'
-
-let BASE_URL = "http://localhost:8080"
+import { BASE_URL } from './config/utils'
+import { mockUser } from './config/lib'
 
 describe("Website Creation", () => {
-    it("Error creating website without a url", async () => {
-        try {
-            await axios.post(`${BASE_URL}/api/website`, {})
+    let userId: string, authCookie: string
 
-            expect(false, "Website got created but it shouldn't")
+    beforeAll(async () => {
+        const data = await mockUser();
+        userId = data.id
+        authCookie = data.cookie
+    })
+
+    it("Error creating website without a url and user id", async () => {
+        try {
+            await axios.post(`${BASE_URL}/api/website`, {}, {
+                headers: {
+                    Cookie: authCookie
+                }
+            })
+
+            expect(false).toBe(true)
+        } catch (err) {
+            console.log(err)
+        }
+    })
+
+    it("Error creating website without a cookie", async () => {
+        try {
+            await axios.post(`${BASE_URL}/api/website`, {
+                user_id: userId,
+                url: "https://itsaatvik.dev"
+            })
+
+            expect(false, "Cookie is missing")
         } catch (err) {
             console.log(err)
         }
@@ -16,8 +41,12 @@ describe("Website Creation", () => {
 
     it("Success creating website with a url", async () => {
         const res = await axios.post(`${BASE_URL}/api/website`, {
-            user_id: "123",
+            user_id: userId,
             url: "https://itsaatvik.dev"
+        }, {
+            headers: {
+                Cookie: authCookie
+            }
         })
 
         expect(res.data.id).not.toBeNull
