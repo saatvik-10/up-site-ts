@@ -16,10 +16,10 @@ describe("Website Creation", () => {
 
     it("Success creating website with a url", async () => {
         const res = await axios.post(`${BASE_URL}/api/website`, {
+            user_id: "123",
             url: "https://itsaatvik.dev"
         })
 
         expect(res.data.id).not.toBeNull
-
     })
 })
