@@ -49,6 +49,64 @@ describe("Website Creation", () => {
             }
         })
 
-        expect(res.data.id).not.toBeNull
+        expect(res.data.id).not.toBeNull()
+    })
+})
+
+describe("Website fetching", () => {
+    let userId1: string, authCookie1: string
+    let userId2: string, authCookie2: string
+
+    beforeAll(async () => {
+        const data1 = await mockUser();
+        userId1 = data1.id
+        authCookie1 = data1.cookie
+
+        const data2 = await mockUser();
+        userId2 = data2.id
+        authCookie2 = data2.cookie
+    })
+
+    it("Fetching user's website successfully", async () => {
+        const res1 = await axios.post(`${BASE_URL}/api/website`, {
+            user_id: userId1,
+            url: "https://itsaatvik.dev"
+        }, {
+            headers: {
+                Cookie: authCookie1
+            }
+        })
+
+        const getRes1 = await axios.get(`${BASE_URL}/api/status/${res1.data.id}`, {
+            headers: {
+                Cookie: authCookie1
+            }
+        })
+
+        expect(getRes1.data.website.id).toBe(res1.data.id)
+        expect(getRes1.data.website.user_id).toBe(userId1)
+    })
+
+    it.todo("Err while fetching other user's website", async () => {
+        const res1 = await axios.post(`${BASE_URL}/api/website`, {
+            user_id: userId1,
+            url: "https://itsaatvik.dev"
+        }, {
+            headers: {
+                Cookie: authCookie1
+            }
+        })
+
+        try {
+            await axios.get(`${BASE_URL}/api/status/${res1.data.id}`, {
+                headers: {
+                    Cookie: authCookie2
+                }
+            })
+
+            expect(false, "Unable to access other user's website")
+        } catch (err) {
+            console.log(err)
+        }
     })
 })
