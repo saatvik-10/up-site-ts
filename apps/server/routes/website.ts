@@ -44,7 +44,11 @@ route.get("/status/:websiteId", authMiddleware, async (req, res) => {
     }
 
     res.json({
-        website
+        website: {
+            id: website.id,
+            url: website.url,
+            user_id: website.user_id
+        }
     })
 })
 
