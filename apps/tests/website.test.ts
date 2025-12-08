@@ -83,8 +83,8 @@ describe("Website fetching", () => {
             }
         })
 
-        expect(getRes1.data.website.id).toBe(res1.data.id)
-        expect(getRes1.data.website.user_id).toBe(userId1)
+        expect(getRes1.data.id).toBe(res1.data.id)
+        expect(getRes1.data.user_id).toBe(userId1)
     })
 
     it.todo("Err while fetching other user's website", async () => {
