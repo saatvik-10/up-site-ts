@@ -22,8 +22,8 @@ route.post("/website", authMiddleware, async (req, res) => {
     })
 })
 
-route.get("/status/:websiteId", authMiddleware, (req, res) => {
-    const website = db.website.findFirst({
+route.get("/status/:websiteId", authMiddleware, async (req, res) => {
+    const website = await db.website.findFirst({
         where: {
             id: req.params.websiteId,
             user_id: req.userId
