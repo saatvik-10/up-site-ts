@@ -21,6 +21,7 @@
       },
       "peerDependencies": {
         "db": "*",
+        "redis-streams": "*",
         "typescript": "^5",
       },
     },
