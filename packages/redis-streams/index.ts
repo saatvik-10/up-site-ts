@@ -6,8 +6,19 @@ interface WebsiteProps {
     url: string;
 }
 
+interface Msg {
+    id: string;
+    message: {
+        id: string,
+        url: string
+    }
+}
+
+const STREAM = 'upsite:websites';
+
 const client = await createClient()
-    .on('error', (err) => console.log('Redis Client Error', err)).connect()
+    .on('error', (err) => console.log('Redis Client Error', err))
+    .connect();
 
 console.log('Redis client connected');
 
@@ -20,9 +31,6 @@ console.log('Redis client connected');
 
 export async function xAddBulk(websites: WebsiteProps[], batchSize = 100) {
     try {
-        await client.connect();
-        console.log('Redis bulk streaming connected');
-
         const validWebsites = websites.filter(
             (website) => website.id && website.url
         );
@@ -35,7 +43,7 @@ export async function xAddBulk(websites: WebsiteProps[], batchSize = 100) {
                 const pipeline = client.multi();
 
                 for (const website of chunk) {
-                    pipeline.xAdd('upsite:websites', '*', {
+                    pipeline.xAdd(STREAM, '*', {
                         id: website.id,
                         url: website.url,
                     });
@@ -48,4 +56,23 @@ export async function xAddBulk(websites: WebsiteProps[], batchSize = 100) {
     } catch (err) {
         console.log('Err connecting redis bulk streaming');
     }
+}
+
+export async function xReadGroup(consumerGrp: string, workerId: string): Promise<Msg[]> {
+    const res = await client.xReadGroup(
+        consumerGrp,
+        workerId,
+        {
+            key: STREAM,
+            id: '>',
+        },
+        {
+            COUNT: 5,
+        }
+    );
+    return res;
+}
+
+export async function xAck(consumerGrp: string, eventId: string) {
+    const res = client.xAck(STREAM, consumerGrp, eventId);
 }
