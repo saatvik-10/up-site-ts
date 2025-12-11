@@ -7,7 +7,12 @@ interface WebsiteProps {
 }
 
 async function producer() {
-    let websites: WebsiteProps[] = await db.website.findMany()
+    let websites: WebsiteProps[] = await db.website.findMany({
+        select: {
+            id: true,
+            url: true
+        }
+    })
 
     try {
         const res = await xAddBulk(websites.map(website => ({
