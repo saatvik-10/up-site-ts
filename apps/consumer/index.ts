@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { xAck, xReadGroup } from 'redis-streams/client';
+import { xAckBulk, xReadGroup } from 'redis-streams/client';
 import { db } from "db/client"
 
 const REGION_ID = process.env.REGION_ID!;
@@ -23,7 +23,7 @@ async function worker() {
 
     await Promise.all(promises)
 
-    xAck(REGION_ID, '0');
+    xAckBulk(REGION_ID, res.map(({ id }) => id));
 }
 
 worker()

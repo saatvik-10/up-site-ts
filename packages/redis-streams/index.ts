@@ -114,6 +114,14 @@ export async function xReadGroup(consumerGrp: string, workerId: string): Promise
     return msgs;
 }
 
-export async function xAck(consumerGrp: string, eventId: string) {
-    client.xAck(STREAM, consumerGrp, eventId);
+export async function xAckBulk(
+    consumerGrp: string,
+    eventIds: string[],
+    batchSize = 200
+) {
+    const chunks = chunkArray(eventIds, batchSize);
+
+    for (const chunk of chunks) {
+        await client.xAck(STREAM, consumerGrp, { ...chunk });
+    }
 }
