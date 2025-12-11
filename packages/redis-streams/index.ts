@@ -8,10 +8,12 @@ interface WebsiteProps {
 
 interface Msg {
     id: string;
-    message: {
-        id: string,
-        url: string
-    }
+    message: Record<string, string>;
+}
+
+interface RedisStreamResponse {
+    name: string;
+    messages: Msg[]
 }
 
 const STREAM = 'upsite:websites';
@@ -36,6 +38,8 @@ export async function xAddBulk(websites: WebsiteProps[], batchSize = 100) {
         );
         if (validWebsites.length == 0) return;
 
+        console.log('Valid websites to add:', validWebsites.length);
+
         const chunks = chunkArray(validWebsites, batchSize);
 
         for (const chunk of chunks) {
@@ -58,6 +62,27 @@ export async function xAddBulk(websites: WebsiteProps[], batchSize = 100) {
     }
 }
 
+// export async function xReadGroup(consumerGrp: string, workerId: string): Promise<any>{
+//     const res = await client.xReadGroup(
+//         consumerGrp,
+//         workerId,
+//         {
+//             key: STREAM,
+//             id: '>',
+//         },
+//         {
+//             COUNT: 5,
+//         }
+//     );
+
+//     //@ts-ignore
+//     let msgs = res[0].messages;
+
+//     console.log(msgs)
+
+//     return msgs;
+// }
+
 export async function xReadGroup(consumerGrp: string, workerId: string): Promise<Msg[]> {
     const res = await client.xReadGroup(
         consumerGrp,
@@ -69,10 +94,26 @@ export async function xReadGroup(consumerGrp: string, workerId: string): Promise
         {
             COUNT: 5,
         }
-    );
-    return res;
+    ) as RedisStreamResponse[] | null
+
+    if (!res || res.length === 0) {
+        console.log('No messages in stream');
+        return [];
+    }
+
+    const msgs: Msg[] = res[0]!.messages.map((msg: any) => ({
+        id: msg.id,
+        message: {
+            id: msg.message.id,
+            url: msg.message.url,
+        },
+    }));
+
+    console.log('Parsed msgs:', msgs);
+
+    return msgs;
 }
 
 export async function xAck(consumerGrp: string, eventId: string) {
-    const res = client.xAck(STREAM, consumerGrp, eventId);
+    client.xAck(STREAM, consumerGrp, eventId);
 }
