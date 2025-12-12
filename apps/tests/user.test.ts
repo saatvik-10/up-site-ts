@@ -6,7 +6,7 @@ describe("User Signup", () => {
     it("Error signing up if incorrect input", async () => {
         try {
             await axios.post(`${BASE_URL}/api/user/sign-up`, {
-                username: "sm12"
+                username: RAND_USERNAME
             })
 
             expect(false, "Statement should be unreachable!")
@@ -18,7 +18,7 @@ describe("User Signup", () => {
     it("Success signing up if correct input", async () => {
         try {
             let res = await axios.post(`${BASE_URL}/api/user/sign-up`, {
-                username: "sm12",
+                username: RAND_USERNAME,
                 password: "password"
             })
 
@@ -33,7 +33,7 @@ describe("User Signin", () => {
     it("Error signing in if incorrect input", async () => {
         try {
             await axios.post(`${BASE_URL}/api/user/sign-in`, {
-                username: "sm12",
+                username: RAND_USERNAME,
                 password: "password"
             })
 
@@ -45,7 +45,7 @@ describe("User Signin", () => {
 
     it("Success signing in if correct input", async () => {
         let res = await axios.post(`${BASE_URL}/api/user/sign-in`, {
-            username: "sm12",
+            username: RAND_USERNAME,
             password: "password"
         })
 
