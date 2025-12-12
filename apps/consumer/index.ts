@@ -15,18 +15,20 @@ if (!WORKER_ID) {
 
 async function worker() {
     //reading, processing and storing via queue in bulk, acknowledgement to the queue
-    const res = await xReadGroup(REGION_ID, WORKER_ID)
+    while (true) {
+        const res = await xReadGroup(REGION_ID, WORKER_ID)
 
-    let promises = res
-        .filter(({ message }) => message.id && message.url)
-        .map(({ message }) => fetchUpTicks(message.id!, message.url!))
+        if (!res) continue;
 
-    await Promise.all(promises)
+        let promises = res
+            .filter(({ message }) => message.id && message.url)
+            .map(({ message }) => fetchUpTicks(message.id!, message.url!))
 
-    xAckBulk(REGION_ID, res.map(({ id }) => id));
+        await Promise.all(promises)
+
+        xAckBulk(REGION_ID, res.map(({ id }) => id));
+    }
 }
-
-worker()
 
 async function fetchUpTicks(websiteId: string, url: string) {
     return new Promise<void>((resolve, reject) => {
@@ -60,3 +62,5 @@ async function fetchUpTicks(websiteId: string, url: string) {
         })
     })
 }
+
+worker()
