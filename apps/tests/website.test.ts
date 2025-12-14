@@ -87,7 +87,7 @@ describe("Website fetching", () => {
         expect(getRes1.data.user_id).toBe(userId1)
     })
 
-    it.todo("Err while fetching other user's website", async () => {
+    it("Err while fetching other user's website", async () => {
         const res1 = await axios.post(`${BASE_URL}/api/website`, {
             user_id: userId1,
             url: "https://itsaatvik.dev"
@@ -108,5 +108,54 @@ describe("Website fetching", () => {
         } catch (err) {
             console.log(err)
         }
+    })
+})
+
+describe("user should get all websites", () => {
+    let userId: string, authCookie: string
+
+    beforeAll(async () => {
+        const data = await mockUser();
+        userId = data.id
+        authCookie = data.cookie
+    })
+
+    it("Fetching user's website successfully", async () => {
+        await axios.post(`${BASE_URL}/api/websites`, {
+            user_id: userId,
+            url: "https://google.com"
+        }, {
+            headers: {
+                Cookie: authCookie
+            }
+        })
+
+        await axios.post(`${BASE_URL}/api/websites`, {
+            user_id: userId,
+            url: "https://itsaatvik.dev"
+        }, {
+            headers: {
+                Cookie: authCookie
+            }
+        })
+
+        await axios.post(`${BASE_URL}/api/websites`, {
+            user_id: userId,
+            url: "https://x.com"
+        }, {
+            headers: {
+                Cookie: authCookie
+            }
+        })
+
+        const res = await axios.get(`${BASE_URL}/api/websites`, {
+            headers: {
+                Cookie: authCookie
+            }
+        })
+
+        expect(false, "Unable to access other user's website")
+
+        expect(res.data.websites.length).toBe(3)
     })
 })
