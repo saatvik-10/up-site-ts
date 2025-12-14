@@ -3,10 +3,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from './ui/spinner';
+import { AuthInput, AuthInputType } from '@/validator/user.validator';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 interface AuthFormProps {
   type: 'sign-in' | 'sign-up';
@@ -15,29 +20,60 @@ interface AuthFormProps {
 const AuthForm = ({ type }: AuthFormProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    password: '',
-  });
 
   const isSignUp = type === 'sign-up';
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const form = useForm<AuthInputType>({
+    resolver: zodResolver(AuthInput),
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form;
+
+  const onSubmit = async (data: AuthInputType) => {
     setIsLoading(true);
 
-    console.log('Form submitted:', formData);
+    try {
+      const endpoint = isSignUp ? 'sign-up' : 'sign-in';
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/${endpoint}`,
+        {
+          username: data.username,
+          password: data.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
-    setIsLoading(false);
+      if (isSignUp) {
+        toast.success('User signed up successfully!');
+        router.push('/sign-in');
+      } else {
+        toast.success(
+          'User signed in successfully! Redirecting to Dashboard...'
+        );
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          'Auth error:',
+          error.response?.data?.message || error.message
+        );
+        toast.error('Authentication error!');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -55,34 +91,35 @@ const AuthForm = ({ type }: AuthFormProps) => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className='space-y-5'>
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
             <div className='space-y-2'>
-              <Label htmlFor='name'>Name</Label>
+              <Label htmlFor='username'>Username</Label>
               <Input
-                id='name'
-                name='name'
+                id='username'
                 type='text'
-                placeholder='John Doe'
-                value={formData.name}
-                onChange={handleChange}
-                required
+                placeholder='johndoe'
+                {...register('username')}
               />
+              {errors.username && (
+                <p className='text-destructive text-xs'>
+                  {errors.username.message}
+                </p>
+              )}
             </div>
 
             <div className='space-y-2'>
-              <div className='flex items-center justify-between'>
-                <Label htmlFor='password'>Password</Label>
-              </div>
+              <Label htmlFor='password'>Password</Label>
               <Input
                 id='password'
-                name='password'
                 type='password'
                 placeholder='••••••••'
-                value={formData.password}
-                onChange={handleChange}
-                required
-                minLength={8}
+                {...register('password')}
               />
+              {errors.password && (
+                <p className='text-destructive text-xs'>
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             <Button
