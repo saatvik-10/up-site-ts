@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { db } from "db/client"
-import { authMiddleware } from "../proxy";
+import { authProxy } from "../proxy";
 
 const route = Router()
 
-route.post("/website", authMiddleware, async (req, res) => {
+route.post("/website", authProxy, async (req, res) => {
     if (!req.body.url) {
         res.status(411).json("Wrong inputs were found")
         return;
@@ -22,7 +22,7 @@ route.post("/website", authMiddleware, async (req, res) => {
     })
 })
 
-route.get("/status/:websiteId", authMiddleware, async (req, res) => {
+route.get("/status/:websiteId", authProxy, async (req, res) => {
     const website = await db.website.findFirst({
         where: {
             id: req.params.websiteId,
@@ -50,6 +50,21 @@ route.get("/status/:websiteId", authMiddleware, async (req, res) => {
             user_id: website.user_id
         }
     })
+})
+
+route.get("websites", authProxy, async (req, res) => {
+    const websites = await db.website.findMany({
+        where: {
+            user_id: req.userId
+        }
+    })
+
+    if (!websites) {
+        res.status(404).send("No Websits found for the user!")
+        return;
+    }
+
+    res.json(websites)
 })
 
 export default route
