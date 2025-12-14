@@ -1,7 +1,7 @@
 import type { Response, Request, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+export function authProxy(req: Request, res: Response, next: NextFunction) {
     const tk = req.cookies.token
 
     if (!tk) {
