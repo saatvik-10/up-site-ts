@@ -1,0 +1,23 @@
+FROM oven/bun:latest
+
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY package.json bun.lock* ./
+COPY turbo.json ./
+
+COPY packages/db ./packages/db
+COPY packages/redis-streams ./packages/redis-streams
+
+COPY apps/consumer ./apps/consumer
+
+RUN bun install
+
+WORKDIR /app/packages/db
+
+RUN bunx prisma generate
+
+WORKDIR /app/apps/consumer
+
+CMD ["bun", "run", "index.ts"]
