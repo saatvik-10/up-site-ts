@@ -3,6 +3,7 @@ import { db } from "db/client"
 import { AuthInput } from "../validator/user.validator";
 import bcrypt from 'bcrypt'
 import { jwtAuth } from "../utils/jwtAuth";
+import { authProxy } from "../proxy";
 
 const route = Router()
 
@@ -69,6 +70,33 @@ route.post("/user/sign-in", async (req, res) => {
             message: "User Logged In Successfully!"
         }
     )
+})
+
+route.get("/user/me", authProxy, async (req, res) => {
+    try {
+        const user = await db.user.findUnique({
+            where: {
+                id: req.userId
+            },
+            select: {
+                id: true,
+                username: true
+            }
+        })
+
+        if (!user) {
+            res.status(404).send("User not found!")
+        }
+
+        return res.json(user)
+    } catch (err) {
+        return res.status(500).send("Server Err!")
+    }
+})
+
+route.post("/user/sign-out", (req, res) => {
+    res.clearCookie("token")
+    return res.status(200).send("Signed out successfully!")
 })
 
 export default route
