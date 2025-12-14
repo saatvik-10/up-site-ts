@@ -1,0 +1,62 @@
+version: "3.8"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile/Dockerfile.web
+    ports:
+      - 3000:3000
+    env_file:
+      - apps/web/.env
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: .
+      dockerfile: dockerfile/Dockerfile.server
+    ports:
+      - 8080:8080
+    env_file:
+      - apps/server/.env
+    depends_on:
+      - postgres
+
+  producer:
+    build:
+      context: .
+      dockerfile: dockerfile/Dockerfile.producer
+    env_file:
+      - apps/producer/.env
+    depends_on:
+      - postgres
+      - redis
+      
+  consumer:
+    build:
+      context: .
+      dockerfile: dockerfile/Dockerfile.consumer
+    env_file:
+      - apps/consumer/.env
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=mysecret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+volumes:
+  postgres_data:
+  redis_data:
