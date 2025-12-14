@@ -33,7 +33,7 @@ route.get("/status/:websiteId", authProxy, async (req, res) => {
                 orderBy: [{
                     created_at: 'desc'
                 }],
-                take: 10,
+                take: 1,
             },
         }
     })
@@ -52,7 +52,7 @@ route.get("/status/:websiteId", authProxy, async (req, res) => {
     })
 })
 
-route.get("websites", authProxy, async (req, res) => {
+route.get("/websites", authProxy, async (req, res) => {
     const websites = await db.website.findMany({
         where: {
             user_id: req.userId
