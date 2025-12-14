@@ -7,14 +7,16 @@ WORKDIR /app
 COPY package.json bun.lock* ./
 COPY turbo.json ./
 
-COPY packages/db ./package/db
+COPY packages/db ./packages/db
 COPY apps/server ./apps/server
 
 RUN bun install
 
-WORKDIR /app/package/db
+WORKDIR /app/packages/db
 
 RUN bunx prisma generate
+
+WORKDIR /app/apps/server
 
 EXPOSE 8080
 
