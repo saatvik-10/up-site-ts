@@ -12,7 +12,7 @@ const Navbar = () => {
           >
             <div className='relative'>
               <div className='w-3 h-3 rounded-full bg-primary status-online' />
-              <div className='absolute inset-0 w-3 h-3 rounded-full bg-primary blur-sm' />
+              <div className='absolute inset-0 w-3 h-3 rounded-full bg-accent blur-sm' />
             </div>
             <span className='text-xl font-bold tracking-tight'>UpSite</span>
           </Link>
