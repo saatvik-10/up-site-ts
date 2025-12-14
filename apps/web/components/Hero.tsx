@@ -1,10 +1,14 @@
-import React from 'react';
+'use client';
+
 import { Activity } from 'lucide-react';
 import { Button } from './ui/button';
 import { AlertTriangle, ArrowRight, Server } from 'lucide-react';
 import Footer from './Footer';
+import { useRouter } from 'next/navigation';
 
 const Hero = () => {
+  const route = useRouter();
+
   return (
     <div className='relative min-h-screen'>
       <section className='relative pt-40 pb-20 px-6'>
@@ -22,8 +26,9 @@ const Hero = () => {
 
           <div className='animate-fade-up delay-300 flex flex-col sm:flex-row items-center justify-center gap-4'>
             <Button
+              onClick={() => route.push('/dashboard')}
               size='lg'
-              className='text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 py-6 group'
+              className='text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 py-6 group cursor-pointer'
             >
               Start Monitoring Free
               <ArrowRight className='ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform' />
@@ -257,20 +262,10 @@ const Hero = () => {
       </section> */}
 
       <section className='relative px-6 py-24'>
-        <div className='max-w-2xl mx-auto text-center'>
-          <h2 className='text-3xl md:text-4xl font-bold tracking-tight mb-4'>
-            Start monitoring your now!
+        <div className='max-w-4xl mx-auto text-center'>
+          <h2 className='text-3xl md:text-6xl font-bold tracking-tight mb-4'>
+            Start monitoring yours now!
           </h2>
-          {/* <p className='text-muted-foreground text-lg mb-8'>
-            Free tier includes 5 monitors with 30-second intervals.
-          </p> */}
-          <Button
-            size='lg'
-            className='text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/60 rounded-full px-8 py-6 group'
-          >
-            Get Started
-            <ArrowRight className='ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform' />
-          </Button>
         </div>
       </section>
 
