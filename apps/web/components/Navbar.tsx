@@ -1,7 +1,16 @@
+'use client'
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
+  const router = useRouter();
+
+  const handleAuthType = (authType: 'sign-in' | 'sign-up') => {
+    router.push(`/${authType}`);
+  };
+
   return (
     <header className='animate-slide-down fixed top-0 left-0 right-0 z-50'>
       <nav className='mx-auto max-w-7xl px-6 py-4'>
@@ -21,10 +30,14 @@ const Navbar = () => {
             <Button
               variant='ghost'
               className='text-sm font-medium hidden sm:flex hover:bg-primary/60 cursor-pointer'
+              onClick={() => handleAuthType('sign-in')}
             >
               Sign In
             </Button>
-            <Button className='text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/60 rounded-full px-5 cursor-pointer'>
+            <Button
+              className='text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/60 rounded-full px-5 cursor-pointer'
+              onClick={() => handleAuthType('sign-up')}
+            >
               Get Started
             </Button>
           </div>
