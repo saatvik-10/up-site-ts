@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -11,23 +11,23 @@ export const useAuth = () => {
 
   const route = useRouter();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/me`, {
-          withCredentials: true,
-        });
+  const checkAuth = useCallback(async () => {
+    try {
+      await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/me`, {
+        withCredentials: true,
+      });
 
-        setIsAuthenticated(true);
-      } catch {
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
+      setIsAuthenticated(true);
+    } catch {
+      setIsAuthenticated(false);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const signOut = async () => {
     try {
