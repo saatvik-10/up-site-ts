@@ -1,0 +1,3 @@
+creation of cg fn
+individual website status page
+notification system via queue
