@@ -24,13 +24,6 @@ const client = await createClient()
 
 console.log('Redis client connected');
 
-// export async function xAdd({ id, url }: WebsiteProps) {
-//   await client.xAdd('upsite:websites', '*', {
-//     id: id,
-//     url: url,
-//   });
-// }
-
 export async function xAddBulk(websites: WebsiteProps[], batchSize = 100) {
     try {
         const validWebsites = websites.filter(
@@ -62,26 +55,17 @@ export async function xAddBulk(websites: WebsiteProps[], batchSize = 100) {
     }
 }
 
-// export async function xReadGroup(consumerGrp: string, workerId: string): Promise<any>{
-//     const res = await client.xReadGroup(
-//         consumerGrp,
-//         workerId,
-//         {
-//             key: STREAM,
-//             id: '>',
-//         },
-//         {
-//             COUNT: 5,
-//         }
-//     );
 
-//     //@ts-ignore
-//     let msgs = res[0].messages;
-
-//     console.log(msgs)
-
-//     return msgs;
-// }
+export async function xCreateGroup(consumerGrp: string) {
+    try {
+        await client.xGroupCreate(STREAM, consumerGrp, '0', {
+            MKSTREAM: true,
+        });
+        console.log(`Consumer group '${consumerGrp}' created successfully`);
+    } catch (err: any) {
+        console.error('Error creating consumer group:', err);
+    }
+}
 
 export async function xReadGroup(consumerGrp: string, workerId: string): Promise<Msg[]> {
     const res = await client.xReadGroup(
@@ -122,6 +106,6 @@ export async function xAckBulk(
     const chunks = chunkArray(eventIds, batchSize);
 
     for (const chunk of chunks) {
-        await client.xAck(STREAM, consumerGrp, { ...chunk });
+        await client.xAck(STREAM, consumerGrp, chunk);
     }
 }
