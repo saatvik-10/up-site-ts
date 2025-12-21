@@ -21,17 +21,17 @@ model user {
 }
 
 model website {
-  id        String         @id @default(cuid())
-  url       String
+  id         String         @id @default(cuid())
+  url        String
   time_added DateTime       @default(now())
-  ticks     website_tick[]
-  user_id   String
-  user      user           @relation(fields: [user_id], references: [id])
+  ticks      website_tick[]
+  user_id    String
+  user       user           @relation(fields: [user_id], references: [id])
 }
 
 model region {
   id    String         @id @default(cuid())
-  name  String
+  name  String         @unique
   ticks website_tick[]
 }
 
@@ -43,7 +43,7 @@ model website_tick {
   website_id       String
   region           region         @relation(fields: [region_id], references: [id])
   website          website        @relation(fields: [website_id], references: [id])
-  created_at        DateTime       @default(now())
+  created_at       DateTime       @default(now())
 }
 
 enum website_status {
