@@ -148,7 +148,7 @@ const Hero = () => {
 
             <div className='relative'>
               <div className='text-6xl font-bold text-primary/20 mb-4'>02</div>
-              <h3 className='text-xl font-semibold mb-3'>We ping every 30s</h3>
+              <h3 className='text-xl font-semibold mb-3'>We ping every 180s</h3>
               <p className='text-muted-foreground leading-relaxed'>
                 Our distributed workers check your sites from multiple regions.
                 Response times and status codes are logged.
