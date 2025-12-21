@@ -49,5 +49,5 @@ export const useAuth = () => {
     }
   };
 
-  return { isAuthenticated, isLoading, signOut };
+  return { isAuthenticated, isLoading, signOut, checkAuth };
 };
