@@ -12,6 +12,7 @@ import { Spinner } from './ui/spinner';
 import { AuthInput, AuthInputType } from '@/validator/user.validator';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useAuth } from '@/lib/useAuth';
 
 interface AuthFormProps {
   type: 'sign-in' | 'sign-up';
@@ -19,6 +20,7 @@ interface AuthFormProps {
 
 const AuthForm = ({ type }: AuthFormProps) => {
   const router = useRouter();
+  const { checkAuth } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const isSignUp = type === 'sign-up';
@@ -61,6 +63,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         toast.success(
           'User signed in successfully! Redirecting to Dashboard...'
         );
+        await checkAuth();
         router.push('/dashboard');
       }
     } catch (error) {
