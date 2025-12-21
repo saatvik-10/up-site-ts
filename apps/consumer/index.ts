@@ -1,66 +1,84 @@
 import axios from 'axios';
-import { xAckBulk, xReadGroup } from 'redis-streams/client';
-import { db } from "db/client"
+import { xAckBulk, xReadGroup, xCreateGroup } from 'redis-streams/client';
+import { db } from 'db/client';
 
-const REGION_ID = process.env.REGION_ID!;
+const CONSUMER_GROUP = process.env.CONSUMER_GROUP!;
 const WORKER_ID = process.env.WORKER_ID!;
 
-if (!REGION_ID) {
-    throw new Error('Region Id is missing');
+if (!WORKER_ID) {
+  throw new Error('Worker Id is missing');
 }
 
-if (!WORKER_ID) {
-    throw new Error('Worker Id is missing');
-}
+console.log(
+  `Starting consumer with Group: ${CONSUMER_GROUP}, Worker: ${WORKER_ID}`
+);
 
 async function worker() {
-    //reading, processing and storing via queue in bulk, acknowledgement to the queue
-    while (true) {
-        const res = await xReadGroup(REGION_ID, WORKER_ID)
+  await xCreateGroup(CONSUMER_GROUP);
 
-        if (!res) continue;
+  const region = await db.region.upsert({
+    where: {
+      name: CONSUMER_GROUP,
+    },
+    update: {},
+    create: {
+      name: CONSUMER_GROUP,
+    },
+  });
 
-        let promises = res
-            .filter(({ message }) => message.id && message.url)
-            .map(({ message }) => fetchUpTicks(message.id!, message.url!))
+  const region_id = region.id;
 
-        await Promise.all(promises)
+  while (true) {
+    const res = await xReadGroup(CONSUMER_GROUP, WORKER_ID);
 
-        xAckBulk(REGION_ID, res.map(({ id }) => id));
-    }
+    if (!res) continue;
+
+    let promises = res
+      .filter(({ message }) => message.id && message.url)
+      .map(({ message }) => fetchUpTicks(message.id!, message.url!, region_id));
+
+    await Promise.all(promises);
+
+    xAckBulk(
+      CONSUMER_GROUP,
+      res.map(({ id }) => id)
+    );
+  }
 }
 
-async function fetchUpTicks(websiteId: string, url: string) {
-    return new Promise<void>((resolve, reject) => {
+async function fetchUpTicks(websiteId: string, url: string, region_id: string) {
+  return new Promise<void>((resolve, reject) => {
+    const startTime = Date.now();
 
-        const startTime = Date.now()
+    axios
+      .get(url)
+      .then(async () => {
+        const endTime = Date.now();
 
-        axios.get(url).then(async () => {
-            const endTime = Date.now()
+        await db.website_tick.create({
+          data: {
+            response_time_ms: endTime - startTime,
+            status: 'Up',
+            region_id: region_id,
+            website_id: websiteId,
+          },
+        });
+        resolve();
+      })
+      .catch(async () => {
+        const endTime = Date.now();
 
-            await db.website_tick.create({
-                data: {
-                    response_time_ms: endTime - startTime,
-                    status: "Up",
-                    region_id: REGION_ID,
-                    website_id: websiteId
-                }
-            })
-            resolve()
-        }).catch(async () => {
-            const endTime = Date.now()
-
-            await db.website_tick.create({
-                data: {
-                    response_time_ms: endTime - startTime,
-                    status: "Down",
-                    region_id: REGION_ID,
-                    website_id: websiteId
-                }
-            })
-            resolve()
-        })
-    })
+        await db.website_tick.create({
+          data: {
+            response_time_ms: endTime - startTime,
+            status: 'Down',
+            region_id: region_id,
+            website_id: websiteId,
+          },
+        });
+        resolve();
+      });
+  });
 }
 
-worker()
+worker();
