@@ -1,1 +1,5 @@
 notification system via queue
+
+self known down time
+
+can add a self cron job
