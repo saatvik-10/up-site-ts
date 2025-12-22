@@ -10,7 +10,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import WebsiteModal from '@/components/WebsiteModal';
 import { ChevronRight, Globe, Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, getStatusColor } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 
 interface Website {
@@ -30,9 +30,9 @@ interface WebsiteTick {
 const Page = () => {
   const route = useRouter();
 
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
-  const isLoading = useAuthStore((s) => s.isLoading)
-  
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isLoading = useAuthStore((s) => s.isLoading);
+
   const [websites, setWebsites] = useState<Website[]>([]);
   const [loadingWebsites, setLoadingWebsites] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -63,17 +63,6 @@ const Page = () => {
       fetchWebsites();
     }
   }, [isAuthenticated, fetchWebsites]);
-
-  const getStatusColor = (status?: string) => {
-    switch (status) {
-      case 'Up':
-        return 'bg-accent';
-      case 'Down':
-        return 'bg-destructive';
-      default:
-        return 'bg-muted-foreground';
-    }
-  };
 
   const getStatusText = (status?: string) => {
     switch (status) {
