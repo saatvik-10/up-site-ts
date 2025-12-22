@@ -18,6 +18,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'UpSite',
   description: 'Monitor your websites blazing-fast uptime checks.',
+  icons: [
+    {
+      url: '/icon.png',
+    },
+    {
+      url: '/apple-touch-icon.png',
+    },
+  ],
 };
 
 export default function RootLayout({
