@@ -43,7 +43,7 @@ const StatusBar = ({ ticks }: { ticks: WebsiteTick[] }) => {
       {Array.from({ length: emptySlots }).map((_, i) => (
         <div
           key={`empty-${i}`}
-          className='w-2 h-4 rounded-[2px] bg-muted-foreground/30'
+          className='w-2 lg:w-7 md:w-7 h-2 rounded-[2px] bg-muted-foreground/30'
           title='Pending'
         />
       ))}
