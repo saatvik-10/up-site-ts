@@ -7,12 +7,10 @@ WORKDIR /app
 COPY package.json bun.lock* ./
 COPY turbo.json ./
 
-COPY packages/db ./packages/db
-COPY packages/redis-streams ./packages/redis-streams
+COPY packages ./packages
+COPY apps ./apps
 
-COPY apps/consumer ./apps/consumer
-
-RUN bun install
+RUN bun install --frozen-lockfile
 
 WORKDIR /app/packages/db
 
