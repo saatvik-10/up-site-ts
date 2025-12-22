@@ -96,11 +96,11 @@ const Hero = () => {
                     <span className='font-mono text-sm'>{site.name}</span>
                   </div>
                   <div className='flex items-center gap-6 text-sm'>
-                    <span className='text-muted-foreground font-mono'>
+                    <span className='text-muted-foreground font-mono hidden md:block'>
                       {site.latency}
                     </span>
                     <span
-                      className={`font-mono ${
+                      className={`font-mono hidden md:block ${
                         site.status === 'up'
                           ? 'text-accent'
                           : site.status === 'unknown'
@@ -181,7 +181,7 @@ const Hero = () => {
             </p>
           </div>
 
-          <div className='grid grid-cols-3 gap-6 items-center'>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 items-center'>
             <div className='text-center p-6 rounded-xl bg-card border border-border'>
               <div className='w-14 h-14 mx-auto rounded-lg bg-primary/10 flex items-center justify-center mb-4'>
                 <Server className='w-7 h-7 text-primary' />
@@ -192,8 +192,8 @@ const Hero = () => {
               </p>
             </div>
 
-            <div className='flex items-center justify-center'>
-              <div className='w-full h-px bg-accent relative'>
+            <div className='flex items-center justify-center rotate-90 md:rotate-0'>
+              <div className='w-8 md:w-full h-px bg-accent relative'>
                 <div className='absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r border-accent rotate-45' />
               </div>
             </div>
