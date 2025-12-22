@@ -77,7 +77,7 @@ describe("Website fetching", () => {
             }
         })
 
-        const getRes1 = await axios.get(`${BASE_URL}/api/status/${res1.data.id}`, {
+        const getRes1 = await axios.get(`${BASE_URL}/api/website/${res1.data.id}`, {
             headers: {
                 Cookie: authCookie1
             }
@@ -98,7 +98,7 @@ describe("Website fetching", () => {
         })
 
         try {
-            await axios.get(`${BASE_URL}/api/status/${res1.data.id}`, {
+            await axios.get(`${BASE_URL}/api/website/${res1.data.id}`, {
                 headers: {
                     Cookie: authCookie2
                 }

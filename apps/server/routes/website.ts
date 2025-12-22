@@ -22,7 +22,37 @@ route.post("/website", authProxy, async (req, res) => {
     })
 })
 
-route.get("/status/:websiteId", authProxy, async (req, res) => {
+// route.get("/status/:websiteId", authProxy, async (req, res) => {
+//     const website = await db.website.findFirst({
+//         where: {
+//             id: req.params.websiteId,
+//             user_id: req.userId
+//         },
+//         include: {
+//             ticks: {
+//                 orderBy: [{
+//                     created_at: 'desc'
+//                 }],
+//                 take: 1,
+//             },
+//         }
+//     })
+
+//     if (!website) {
+//         res.status(404).send("Website not found!")
+//         return;
+//     }
+
+//     res.json({
+//         website: {
+//             id: website.id,
+//             url: website.url,
+//             user_id: website.user_id
+//         }
+//     })
+// })
+
+route.get("/website/:websiteId", authProxy, async (req, res) => {
     const website = await db.website.findFirst({
         where: {
             id: req.params.websiteId,
@@ -33,13 +63,16 @@ route.get("/status/:websiteId", authProxy, async (req, res) => {
                 orderBy: [{
                     created_at: 'desc'
                 }],
-                take: 1,
+                take: 10,
+                include: {
+                    region: true
+                }
             },
         }
     })
 
     if (!website) {
-        res.status(404).send("Website not found!")
+        res.status(404).json({ error: "Website not found" })
         return;
     }
 
@@ -47,7 +80,9 @@ route.get("/status/:websiteId", authProxy, async (req, res) => {
         website: {
             id: website.id,
             url: website.url,
-            user_id: website.user_id
+            user_id: website.user_id,
+            time_added: website.time_added,
+            ticks: website.ticks
         }
     })
 })
@@ -56,6 +91,13 @@ route.get("/websites", authProxy, async (req, res) => {
     const websites = await db.website.findMany({
         where: {
             user_id: req.userId
+        },
+        include: {
+            ticks: {
+                orderBy: [{
+                    created_at: 'desc'
+                }],
+            },
         }
     })
 
