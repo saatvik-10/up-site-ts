@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/lib/useAuth';
+import { useAuthStore } from '@/lib/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useEffect, useState, useCallback } from 'react';
@@ -30,7 +30,9 @@ interface WebsiteTick {
 const Page = () => {
   const route = useRouter();
 
-  const { isAuthenticated, isLoading } = useAuth();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const isLoading = useAuthStore((s) => s.isLoading)
+  
   const [websites, setWebsites] = useState<Website[]>([]);
   const [loadingWebsites, setLoadingWebsites] = useState(true);
   const [showModal, setShowModal] = useState(false);

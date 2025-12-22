@@ -12,15 +12,16 @@ import { Spinner } from './ui/spinner';
 import { AuthInput, AuthInputType } from '@/validator/user.validator';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { useAuth } from '@/lib/useAuth';
+import { useAuthStore } from '@/lib/useAuthStore';
 
 interface AuthFormProps {
   type: 'sign-in' | 'sign-up';
 }
 
 const AuthForm = ({ type }: AuthFormProps) => {
-  const router = useRouter();
-  const { checkAuth } = useAuth();
+  useAuthStore.getState().setAuthenticated(true);
+
+  const route = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const isSignUp = type === 'sign-up';
@@ -58,13 +59,12 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
       if (isSignUp) {
         toast.success('User signed up successfully!');
-        router.push('/sign-in');
+        route.push('/sign-in');
       } else {
         toast.success(
           'User signed in successfully! Redirecting to Dashboard...'
         );
-        await checkAuth();
-        router.push('/dashboard');
+        route.push('/dashboard');
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

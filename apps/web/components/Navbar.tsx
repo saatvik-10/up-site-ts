@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/useAuth';
+import { useAuthStore } from '@/lib/useAuthStore';
 
 const Navbar = () => {
   const route = useRouter();
@@ -12,7 +12,8 @@ const Navbar = () => {
     route.push(`/${authType}`);
   };
 
-  const { isAuthenticated, signOut } = useAuth();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const signOut = useAuthStore((s) => s.signOut);
 
   return (
     <header className='animate-slide-down fixed top-0 left-0 right-0 z-50'>
