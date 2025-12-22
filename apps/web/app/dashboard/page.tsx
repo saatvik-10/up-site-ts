@@ -12,20 +12,7 @@ import WebsiteModal from '@/components/WebsiteModal';
 import { ChevronRight, Globe, Plus } from 'lucide-react';
 import { cn, getStatusColor } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
-
-interface Website {
-  id: string;
-  url: string;
-  time_added: string;
-  ticks?: WebsiteTick[];
-}
-
-interface WebsiteTick {
-  id: string;
-  response_time_ms: number;
-  status: 'Up' | 'Down' | 'Unknown';
-  created_at: string;
-}
+import { Website } from '../types';
 
 const Page = () => {
   const route = useRouter();
