@@ -8,12 +8,17 @@ import { useAuthStore } from '@/lib/useAuthStore';
 const Navbar = () => {
   const route = useRouter();
 
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const signOut = useAuthStore((s) => s.signOut);
+
   const handleAuthType = (authType: 'sign-in' | 'sign-up') => {
     route.push(`/${authType}`);
   };
 
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const signOut = useAuthStore((s) => s.signOut);
+  const handleSignOut = async () => {
+    await signOut();
+    route.push('/');
+  };
 
   return (
     <header className='animate-slide-down fixed top-0 left-0 right-0 z-50'>
@@ -60,7 +65,7 @@ const Navbar = () => {
                 </Button>
                 <Button
                   className='text-sm font-semibold bg-destructive text-primary hover:bg-destructive/60 rounded-lg px-5 cursor-pointer'
-                  onClick={signOut}
+                  onClick={handleSignOut}
                 >
                   Sign out
                 </Button>

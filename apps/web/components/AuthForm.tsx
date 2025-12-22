@@ -19,8 +19,6 @@ interface AuthFormProps {
 }
 
 const AuthForm = ({ type }: AuthFormProps) => {
-  useAuthStore.getState().setAuthenticated(true);
-
   const route = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,6 +62,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         toast.success(
           'User signed in successfully! Redirecting to Dashboard...'
         );
+        useAuthStore.setState({ isAuthenticated: true });
         route.push('/dashboard');
       }
     } catch (error) {

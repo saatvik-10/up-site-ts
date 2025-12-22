@@ -1,7 +1,6 @@
 'use client';
 
 import axios from 'axios';
-import { useEffect } from "react";
 import { toast } from 'sonner';
 import { create } from 'zustand'
 
@@ -35,9 +34,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/sign-out`,
         {},
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
       set({ isAuthenticated: false, isLoading: false });
       toast.success('Signed out successfully!');
@@ -46,16 +43,3 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   }
 }))
-
-
-export const useAuth = () => {
-  const checkAuth = useAuthStore((s) => s.checkAuth);
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const isLoading = useAuthStore((s) => s.isLoading);
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  return { isAuthenticated, isLoading };
-};

@@ -1,11 +1,16 @@
-// components/auth/AuthProvider.tsx
 'use client';
 
-import { useAuth } from './useAuthStore';
+import { useEffect } from 'react';
+import { useAuthStore } from '@/lib/useAuthStore';
 import { Spinner } from '@/components/ui/spinner';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { isLoading } = useAuth();
+  const checkAuth = useAuthStore((s) => s.checkAuth);
+  const isLoading = useAuthStore((s) => s.isLoading);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   if (isLoading) {
     return (
