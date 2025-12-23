@@ -4,7 +4,7 @@ const resend = new Resend('re_xxxxxxxxx');
 
 (async function () {
     const { data, error } = await resend.emails.send({
-        from: 'yello@itsaatvik.dev',
+        from: process.env.FROM_MAIL!,
         to: ['delivered@resend.dev'],
         subject: 'Website down alert!',
         html: '<strong>Its down!</strong>',
