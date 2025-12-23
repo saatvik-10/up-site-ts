@@ -1,5 +1,5 @@
 export interface Alert {
-  user_id: string;
+  alert_id: string;
   website_id: string;
   website_url: string;
   user_email: string;
