@@ -3,12 +3,12 @@ import { BASE_URL, RAND_USERNAME } from './utils'
 
 export async function mockUser(): Promise<{ id: string, cookie: string }> {
     const signedUpUser = await axios.post(`${BASE_URL}/api/user/sign-up`, {
-        username: RAND_USERNAME,
+        email: RAND_USERNAME,
         password: "password"
     })
 
     const signedInUser = await axios.post(`${BASE_URL}/api/user/sign-in`, {
-        username: RAND_USERNAME,
+        email: RAND_USERNAME,
         password: "password"
     }, {
         withCredentials: true

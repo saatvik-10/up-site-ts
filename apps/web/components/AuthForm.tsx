@@ -27,7 +27,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
   const form = useForm<AuthInputType>({
     resolver: zodResolver(AuthInput),
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
   });
@@ -47,7 +47,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
       await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/${endpoint}`,
         {
-          username: data.username,
+          email: data.email,
           password: data.password,
         },
         {
@@ -95,16 +95,16 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
           <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
             <div className='space-y-2'>
-              <Label htmlFor='username'>Username</Label>
+              <Label htmlFor='email'>Email</Label>
               <Input
-                id='username'
+                id='email'
                 type='text'
-                placeholder='johndoe'
-                {...register('username')}
+                placeholder='johndoe@gmail.com'
+                {...register('email')}
               />
-              {errors.username && (
+              {errors.email && (
                 <p className='text-destructive text-xs'>
-                  {errors.username.message}
+                  {errors.email.message}
                 </p>
               )}
             </div>
@@ -169,14 +169,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
         {/* Terms */}
         <p className='text-center text-xs text-muted-foreground mt-6'>
-          By continuing, you agree to our{' '}
-          <Link href='/terms' className='hover:underline'>
-            Terms of Service
-          </Link>{' '}
-          and{' '}
-          <Link href='/privacy' className='hover:underline'>
-            Privacy Policy
-          </Link>
+          All uptime alerts and notifications will be sent to this email address
         </p>
       </div>
     </div>

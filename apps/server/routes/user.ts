@@ -20,7 +20,7 @@ route.post("/user/sign-up", async (req, res) => {
 
         let newUser = await db.user.create({
             data: {
-                username: data.data.username,
+                email: data.data.email,
                 password: hashedPswd
             }
         })
@@ -31,7 +31,7 @@ route.post("/user/sign-up", async (req, res) => {
     } catch (err: any) {
         console.log(err)
         if (err.code == "P2002") {
-            return res.status(409).send("Username already exists!")
+            return res.status(409).send("Email already exists!")
         }
         res.status(500).send("Server Err!");
     }
@@ -46,19 +46,19 @@ route.post("/user/sign-in", async (req, res) => {
 
     let user = await db.user.findFirst({
         where: {
-            username: data.data.username
+            email: data.data.email
         }
     })
 
     if (!user || !user.password) {
-        res.status(401).send("Username or Password is wrong!");
+        res.status(401).send("Email or Password is wrong!");
         return;
     }
 
     const valid = await bcrypt.compare(data.data.password, user.password)
 
     if (!valid) {
-        res.status(401).send("Username or Password is wrong!");
+        res.status(401).send("Email or Password is wrong!");
         return;
     }
 
@@ -80,7 +80,7 @@ route.get("/user/me", authProxy, async (req, res) => {
             },
             select: {
                 id: true,
-                username: true
+                email: true
             }
         })
 
