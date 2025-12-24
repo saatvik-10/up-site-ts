@@ -28,6 +28,13 @@ export async function xAddAlert({
   alert_type,
   triggered_at,
 }: Alert) {
+  const key = `alert:sent:${website_id}`;
+  const key_exists = await client.exists(key);
+
+  if (!key_exists) {
+    return;
+  }
+
   await client.xAdd(ALERTSTREAM, '*', {
     alert_id: alert_id,
     website_id: website_id,
@@ -35,6 +42,8 @@ export async function xAddAlert({
     alert_type: alert_type,
     triggered_at: triggered_at.toString(),
   });
+
+  await client.setEx(key, 60 * 60, '1');
 }
 
 export async function xCreateAlertGroup(consumerGrp: string) {
