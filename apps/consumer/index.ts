@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { xAckBulk, xReadGroup, xCreateGroup } from 'redis-streams/client';
+import { xAckBulk, xReadGroup, xCreateGroup, xAddStatus } from 'redis-streams/client';
 import { db } from 'db/client';
 
 const CONSUMER_GROUP = process.env.CONSUMER_GROUP!;
@@ -63,6 +63,9 @@ async function fetchUpTicks(websiteId: string, url: string, region_id: string) {
             website_id: websiteId,
           },
         });
+
+        await xAddStatus(websiteId, 'Up');
+
         resolve();
       })
       .catch(async () => {
@@ -76,6 +79,9 @@ async function fetchUpTicks(websiteId: string, url: string, region_id: string) {
             website_id: websiteId,
           },
         });
+
+        await xAddStatus(websiteId, 'Down');
+
         resolve();
       });
   });

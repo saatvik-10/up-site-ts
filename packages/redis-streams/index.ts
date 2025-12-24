@@ -16,6 +16,14 @@ interface RedisStreamResponse {
     messages: Msg[]
 }
 
+interface StatusMsg {
+    id: string;
+    message: {
+        status: 'Up' | 'Down';
+        timestamp: string;
+    };
+}
+
 const STREAM = 'upsite:websites';
 
 const client = await createClient({
@@ -25,6 +33,35 @@ const client = await createClient({
     .connect();
 
 console.log('Redis client connected');
+
+export async function xAddStatus(websiteId: string, status: 'Up' | 'Down') {
+    await client.xAdd(
+        `upsite:status:${websiteId}`,
+        '*', {
+        status,
+        timestamp: Date.now().toString()
+    }
+    )
+}
+
+export async function xGetRecentStatus(websiteId: string): Promise<StatusMsg[]> {
+    const res = await client.xRevRange(
+        `upsite:status:${websiteId}`,
+        '+',
+        '-',
+        { COUNT: 5 }
+    )
+
+    const statusMsgs: StatusMsg[] = res.map((r: any) => ({
+        id: r.id,
+        message: {
+            status: r.message.status as 'Up' | 'Down',
+            timestamp: r.message.timestamp as string
+        }
+    }));
+
+    return statusMsgs;
+}
 
 export async function xAddBulk(websites: WebsiteProps[], batchSize = 100) {
     try {
