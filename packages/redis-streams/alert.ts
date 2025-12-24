@@ -31,7 +31,8 @@ export async function xAddAlert({
   const key = `alert:sent:${website_id}`;
   const key_exists = await client.exists(key);
 
-  if (!key_exists) {
+  if (key_exists) {
+    console.log(`Alert for website ${website_id} already sent recently, skipping`);
     return;
   }
 
@@ -44,6 +45,7 @@ export async function xAddAlert({
   });
 
   await client.setEx(key, 60 * 60, '1');
+  console.log(`Alert created for website ${website_id}`);
 }
 
 export async function xCreateAlertGroup(consumerGrp: string) {
