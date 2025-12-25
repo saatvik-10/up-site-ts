@@ -12,10 +12,15 @@
     },
     "apps/alert-worker": {
       "name": "alert-worker",
+      "dependencies": {
+        "resend": "^6.6.0",
+      },
       "devDependencies": {
         "@types/bun": "latest",
       },
       "peerDependencies": {
+        "db": "*",
+        "redis-streams": "*",
         "typescript": "^5",
       },
     },
