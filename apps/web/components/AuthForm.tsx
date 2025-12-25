@@ -98,7 +98,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
               <Label htmlFor='email'>Email</Label>
               <Input
                 id='email'
-                type='text'
+                type='email'
                 placeholder='johndoe@gmail.com'
                 {...register('email')}
               />
