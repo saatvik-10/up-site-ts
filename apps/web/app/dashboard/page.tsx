@@ -23,6 +23,11 @@ const Page = () => {
   const [websites, setWebsites] = useState<Website[]>([]);
   const [loadingWebsites, setLoadingWebsites] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [stats, setStats] = useState({
+    upCount: 0,
+    downCount: 0,
+    unknownCount: 0,
+  });
 
   const fetchWebsites = useCallback(async () => {
     try {
@@ -30,7 +35,20 @@ const Page = () => {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/websites`,
         { withCredentials: true }
       );
-      setWebsites(res.data);
+      const fetchedWebsites = res.data;
+      setWebsites(fetchedWebsites);
+
+      const up = fetchedWebsites.filter(
+        (w: Website) => w.ticks?.[0]?.status === 'Up'
+      ).length;
+      const down = fetchedWebsites.filter(
+        (w: Website) => w.ticks?.[0]?.status === 'Down'
+      ).length;
+      setStats({
+        upCount: up,
+        downCount: down,
+        unknownCount: fetchedWebsites.length - up - down,
+      });
     } catch {
       toast.error('Failed to fetch websites');
     } finally {
@@ -74,12 +92,6 @@ const Page = () => {
     return null;
   }
 
-  const upCount = websites.filter((w) => w.ticks?.[0]?.status === 'Up').length;
-  const downCount = websites.filter(
-    (w) => w.ticks?.[0]?.status === 'Down'
-  ).length;
-  const unknownCount = websites.length - upCount - downCount;
-
   return (
     <div className='min-h-screen pt-28 pb-12 px-6'>
       <div className='max-w-7xl mx-auto'>
@@ -109,14 +121,16 @@ const Page = () => {
               <div className='w-2 h-2 rounded-full bg-accent animate-pulse' />
               <p className='text-muted-foreground text-sm'>Operational</p>
             </div>
-            <p className='text-3xl font-bold text-accent'>{upCount}</p>
+            <p className='text-3xl font-bold text-accent'>{stats.upCount}</p>
           </div>
           <div className='bg-card border border-border rounded-xl p-5'>
             <div className='flex items-center gap-2 mb-1'>
               <div className='w-2 h-2 rounded-full bg-destructive animate-pulse' />
               <p className='text-muted-foreground text-sm'>Down</p>
             </div>
-            <p className='text-3xl font-bold text-destructive'>{downCount}</p>
+            <p className='text-3xl font-bold text-destructive'>
+              {stats.downCount}
+            </p>
           </div>
           <div className='bg-card border border-border rounded-xl p-5'>
             <div className='flex items-center gap-2 mb-1'>
@@ -124,7 +138,7 @@ const Page = () => {
               <p className='text-muted-foreground text-sm'>Unknown</p>
             </div>
             <p className='text-3xl font-bold text-muted-foreground'>
-              {unknownCount}
+              {stats.unknownCount}
             </p>
           </div>
         </div>
