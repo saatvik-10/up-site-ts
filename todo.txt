@@ -1,7 +1,3 @@
-notification system via queue
-
 notification history (hv to store in db as well then)
 
-self known down time
-
-can add a self cron job?
+smething else interesting...
