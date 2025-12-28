@@ -7,11 +7,11 @@
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5",
-    "redis-streams": "*",
-    "db": "*"
+    "typescript": "^5"
   },
   "dependencies": {
-    "resend": "^6.6.0"
+    "resend": "^6.6.0",
+    "redis-streams": "*",
+    "db": "*"
   }
 }
