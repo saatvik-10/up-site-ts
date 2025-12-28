@@ -120,7 +120,6 @@ export async function xReadGroup(consumerGrp: string, workerId: string): Promise
     ) as RedisStreamResponse[] | null
 
     if (!res || res.length === 0) {
-        console.log('No messages in stream');
         return [];
     }
 
