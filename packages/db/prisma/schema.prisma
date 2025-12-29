@@ -27,6 +27,7 @@ model website {
   ticks      website_tick[]
   user_id    String
   user       user           @relation(fields: [user_id], references: [id])
+  alerts     alert[]
 }
 
 model region {
@@ -44,6 +45,13 @@ model website_tick {
   region           region         @relation(fields: [region_id], references: [id])
   website          website        @relation(fields: [website_id], references: [id])
   created_at       DateTime       @default(now())
+}
+
+model alert {
+  id         String         @id @default(cuid())
+  status     website_status
+  time_added DateTime       @default(now())
+  websites   website[]
 }
 
 enum website_status {
