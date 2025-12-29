@@ -68,6 +68,12 @@ route.get("/website/:websiteId", authProxy, async (req, res) => {
                     region: true
                 }
             },
+            alerts: {
+                orderBy: [{
+                    time_added: 'desc'
+                }],
+                take: 4,
+            }
         }
     })
 
