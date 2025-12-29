@@ -88,7 +88,8 @@ route.get("/website/:websiteId", authProxy, async (req, res) => {
             url: website.url,
             user_id: website.user_id,
             time_added: website.time_added,
-            ticks: website.ticks
+            ticks: website.ticks,
+            alerts: website.alerts
         }
     })
 })
