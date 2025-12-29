@@ -41,9 +41,17 @@ async function alertWorker() {
         );
 
         await xAckAlert(ALERT_CONSUMER_GROUP, alert.id);
+
+        await db.alert.create({
+          data: {
+            status: "Down",
+            websites: {
+              connect: { id: website_id }
+            }
+          },
+        })
       } catch (err) {
-        console.log('Err sending alert. Retrying...');
-        await xAckAlert(ALERT_CONSUMER_GROUP, alert.id);
+        console.log('Err sending alert');
       }
     }
   }
