@@ -30,7 +30,6 @@ A website uptime monitoring platform built with Turborepo, Next.js, Express, Pri
     POSTGRES_PASSWORD=yourpassword
 
     # All 4 can be anything for local deployment purpose
-    CONSUMER_GROUP=your-consumer-group
     WORKER_ID=your-worker-id
     ALERT_WORKER_ID=your-alert-worker-id
 
@@ -76,17 +75,19 @@ A website uptime monitoring platform built with Turborepo, Next.js, Express, Pri
 2. **Create a `.env` file in the root directory** with all required environment variables. For Docker setup, use service names for database and Redis:
 
    ```env
-   DATABASE_URL=postgresql://postgres:yourpassword@postgres:5432/upsite
-   JWT_SECRET=your-secret-key
-   REDIS_URL=redis://redis:6379
-   NEXT_PUBLIC_API_URL=http://localhost:8080
-   POSTGRES_PASSWORD=yourpassword
-   CONSUMER_GROUP=your-consumer-group
-   WORKER_ID=your-worker-id
-   RESEND_API_KEY=your-resend-api-key
-   FROM_MAIL=your-email@example.com
-   ALERT_WORKER_ID=your-alert-worker-id
-   ```
+    DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/upsite
+    JWT_SECRET=your-secret-key
+    REDIS_URL=redis://localhost:6379
+    NEXT_PUBLIC_API_URL=http://localhost:8080
+    POSTGRES_PASSWORD=yourpassword
+
+    # All 4 can be anything for local deployment purpose
+    WORKER_ID=your-worker-id
+    ALERT_WORKER_ID=your-alert-worker-id
+
+    RESEND_API_KEY=your-resend-api-key
+    FROM_MAIL=your-email@example.com
+    ```
 
 3. **Build and start the stack:**
 
