@@ -6,7 +6,7 @@ import {
 import { db } from 'db/client';
 import { alertMail } from './email';
 
-const ALERT_CONSUMER_GROUP = process.env.ALERT_CONSUMER_GROUP!;
+const ALERT_CONSUMER_GROUP = 'upsite:status';
 const ALERT_WORKER_ID = process.env.ALERT_WORKER_ID!;
 
 async function alertWorker() {

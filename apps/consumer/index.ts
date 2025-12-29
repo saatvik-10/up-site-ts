@@ -2,7 +2,7 @@ import axios from 'axios';
 import { xAckBulk, xReadGroup, xCreateGroup, xAddStatus } from 'redis-streams/client';
 import { db } from 'db/client';
 
-const CONSUMER_GROUP = process.env.CONSUMER_GROUP!;
+const CONSUMER_GROUP = 'upsite:websites';
 const WORKER_ID = process.env.WORKER_ID!;
 
 if (!WORKER_ID) {

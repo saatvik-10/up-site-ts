@@ -22,25 +22,21 @@ A website uptime monitoring platform built with Turborepo, Next.js, Express, Pri
 
 2. **Create a `.env` file in the root directory** with all required environment variables. Example:
 
-   ```env
-   # Database
-   DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/upsite
-   POSTGRES_USER=postgres
-   POSTGRES_PASSWORD=yourpassword
-   POSTGRES_DB=upsite
+    ```env
+    DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/upsite
+    JWT_SECRET=your-secret-key
+    REDIS_URL=redis://localhost:6379
+    NEXT_PUBLIC_API_URL=http://localhost:8080
+    POSTGRES_PASSWORD=yourpassword
 
-   # Redis
-   REDIS_URL=redis://localhost:6379
+    # All 4 can be anything for local deployment purpose
+    CONSUMER_GROUP=your-consumer-group
+    WORKER_ID=your-worker-id
+    ALERT_WORKER_ID=your-alert-worker-id
 
-   # JWT
-   JWT_SECRET=your-secret-key
-
-   # API
-   NEXT_PUBLIC_API_URL=http://localhost:8080
-
-   # Email (Resend)
-   RESEND_API_KEY=your-resend-api-key
-   ```
+    RESEND_API_KEY=your-resend-api-key
+    FROM_MAIL=your-email@example.com
+    ```
 
 3. **Set up the database:**
    - Ensure PostgreSQL and Redis are running locally, or start them with Docker:
@@ -77,7 +73,20 @@ A website uptime monitoring platform built with Turborepo, Next.js, Express, Pri
 
 1. **Ensure Docker and Docker Compose are installed and running.**
 
-2. **Create a `.env` file in the root directory** (see example in section 1).
+2. **Create a `.env` file in the root directory** with all required environment variables. For Docker setup, use service names for database and Redis:
+
+   ```env
+   DATABASE_URL=postgresql://postgres:yourpassword@postgres:5432/upsite
+   JWT_SECRET=your-secret-key
+   REDIS_URL=redis://redis:6379
+   NEXT_PUBLIC_API_URL=http://localhost:8080
+   POSTGRES_PASSWORD=yourpassword
+   CONSUMER_GROUP=your-consumer-group
+   WORKER_ID=your-worker-id
+   RESEND_API_KEY=your-resend-api-key
+   FROM_MAIL=your-email@example.com
+   ALERT_WORKER_ID=your-alert-worker-id
+   ```
 
 3. **Build and start the stack:**
 
