@@ -22,20 +22,20 @@ A website uptime monitoring platform built with Turborepo, Next.js, Express, Pri
 
 2. **Create a `.env` file in the root directory** with all required environment variables. Example:
 
-    ```env
-    DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/upsite
-    JWT_SECRET=your-secret-key
-    REDIS_URL=redis://localhost:6379
-    NEXT_PUBLIC_API_URL=http://localhost:8080
-    POSTGRES_PASSWORD=yourpassword
+   ```env
+   DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/upsite
+   JWT_SECRET=your-secret-key
+   REDIS_URL=redis://localhost:6379
+   NEXT_PUBLIC_API_URL=http://localhost:8080
+   POSTGRES_PASSWORD=yourpassword
 
-    # All 4 can be anything for local deployment purpose
-    WORKER_ID=your-worker-id
-    ALERT_WORKER_ID=your-alert-worker-id
+   # All 4 can be anything for local deployment purpose
+   WORKER_ID=your-worker-id
+   ALERT_WORKER_ID=your-alert-worker-id
 
-    RESEND_API_KEY=your-resend-api-key
-    FROM_MAIL=your-email@example.com
-    ```
+   RESEND_API_KEY=your-resend-api-key
+   FROM_MAIL=your-email@example.com
+   ```
 
 3. **Set up the database:**
    - Ensure PostgreSQL and Redis are running locally, or start them with Docker:
@@ -87,19 +87,19 @@ A website uptime monitoring platform built with Turborepo, Next.js, Express, Pri
 
     RESEND_API_KEY=your-resend-api-key
     FROM_MAIL=your-email@example.com
-    ```
+   ```
 
 3. **Build and start the stack:**
 
    ```sh
-   ./docker-start.sh
+   bun docker
    ```
 
    Or manually:
 
    ```sh
-   docker-compose build
-   docker-compose up -d
+   docker compose build
+   docker compose up -d
    ```
 
 4. **Service startup order:**
@@ -117,12 +117,12 @@ A website uptime monitoring platform built with Turborepo, Next.js, Express, Pri
 6. **View logs:**
 
    ```sh
-   docker-compose logs -f
+   docker compose logs -f
    ```
 
 7. **Stop services:**
    ```sh
-   docker-compose down
+   docker compose down
    ```
 
 > For advanced Docker usage, troubleshooting, and production deployment tips, see [docker/README.md](docker/README.md).
