@@ -1,8 +1,8 @@
 'use client';
 
-import { Activity } from 'lucide-react';
+import { Activity, MailCheckIcon } from 'lucide-react';
 import { Button } from './ui/button';
-import { AlertTriangle, ArrowRight, Server } from 'lucide-react';
+import { ArrowRight, Server } from 'lucide-react';
 import Footer from './Footer';
 import { useRouter } from 'next/navigation';
 
@@ -21,7 +21,8 @@ const Hero = () => {
 
           <p className='animate-fade-up delay-200 max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed'>
             Real-time uptime monitoring for websites.
-            {/* Get instant alerts the moment something breaks. */}
+            <br />
+            Get instant alerts the moment something breaks.
           </p>
 
           <div className='animate-fade-up delay-300 flex flex-col sm:flex-row items-center justify-center gap-4'>
@@ -97,7 +98,7 @@ const Hero = () => {
                   </div>
                   <div className='flex items-center gap-6 text-sm'>
                     <span className='text-muted-foreground font-mono hidden md:block'>
-                      {site.latency}
+                      {site.uptime}
                     </span>
                     <span
                       className={`font-mono hidden md:block ${
@@ -108,18 +109,7 @@ const Hero = () => {
                             : 'text-destructive'
                       }`}
                     >
-                      {site.uptime}
-                    </span>
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${
-                        site.status === 'up'
-                          ? 'bg-accent/10 text-accent'
-                          : site.status === 'unknown'
-                            ? 'bg-muted-foreground/10 text-muted-foreground'
-                            : 'bg-destructive/10 text-destructive'
-                      }`}
-                    >
-                      {site.status.toUpperCase()}
+                      {site.latency}
                     </span>
                   </div>
                 </div>
@@ -135,8 +125,7 @@ const Hero = () => {
             How it works
           </h2>
 
-          {/* <div className='grid md:grid-cols-3 gap-8'> */}
-          <div className='grid md:grid-cols-2 gap-8'>
+          <div className='grid md:grid-cols-3 gap-8'>
             <div className='relative'>
               <div className='text-6xl font-bold text-primary/20 mb-4'>01</div>
               <h3 className='text-xl font-semibold mb-3'>Add your endpoints</h3>
@@ -155,16 +144,15 @@ const Hero = () => {
               </p>
             </div>
 
-            {/* <div className='relative'>
+            <div className='relative'>
               <div className='text-6xl font-bold text-primary/20 mb-4'>03</div>
               <h3 className='text-xl font-semibold mb-3'>
                 Get alerted instantly
               </h3>
               <p className='text-muted-foreground leading-relaxed'>
-                When something goes wrong, you know immediately. Email, Slack,
-                Discord — pick your channel.
+                When something goes wrong, you know immediately via Email.
               </p>
-            </div> */}
+            </div>
           </div>
         </div>
       </section>
@@ -211,61 +199,17 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* <section className='relative px-6 py-24'>
+      <section className='relative px-6 py-24'>
         <div className='max-w-3xl mx-auto'>
-          <div className='text-center mb-12'>
-            <h2 className='text-3xl md:text-4xl font-bold tracking-tight mb-4'>
+          <div className='flex flex-col items-center gap-4'>
+            <h2 className='text-3xl md:text-6xl font-bold tracking-tight'>
               Alerts that matter
             </h2>
             <p className='text-muted-foreground'>
               No noise. Just actionable notifications when things break.
             </p>
+            <MailCheckIcon className='size-15' />
           </div>
-
-          <div className='rounded-xl bg-card border border-destructive/30 overflow-hidden'>
-            <div className='flex items-center gap-3 px-5 py-4 bg-destructive/5 border-b border-destructive/20'>
-              <AlertTriangle className='w-5 h-5 text-destructive' />
-              <span className='font-semibold text-destructive'>
-                Incident Detected
-              </span>
-              <span className='ml-auto text-xs font-mono text-muted-foreground'>
-                2 min ago
-              </span>
-            </div>
-            <div className='p-5 space-y-4'>
-              <div className='flex items-center justify-between'>
-                <span className='text-sm text-muted-foreground'>Endpoint</span>
-                <span className='font-mono text-sm'>
-                  staging.yourapp.com/health
-                </span>
-              </div>
-              <div className='flex items-center justify-between'>
-                <span className='text-sm text-muted-foreground'>Status</span>
-                <span className='font-mono text-sm text-destructive'>
-                  503 Service Unavailable
-                </span>
-              </div>
-              <div className='flex items-center justify-between'>
-                <span className='text-sm text-muted-foreground'>Region</span>
-                <span className='font-mono text-sm'>eu-west-1</span>
-              </div>
-              <div className='pt-4 border-t border-border'>
-                <p className='text-sm text-muted-foreground'>
-                  Alert sent to{' '}
-                  <span className='text-foreground'>#ops-alerts</span> on Slack
-                  and <span className='text-foreground'>team@yourapp.com</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
-      <section className='relative px-6 py-24'>
-        <div className='max-w-4xl mx-auto text-center'>
-          <h2 className='text-3xl md:text-6xl font-bold tracking-tight mb-4'>
-            Start monitoring yours now!
-          </h2>
         </div>
       </section>
 
