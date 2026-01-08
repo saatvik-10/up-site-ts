@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -19,7 +19,6 @@ model user {
   password String
   websites website[]
 }
-
 model website {
   id         String         @id @default(cuid())
   url        String
