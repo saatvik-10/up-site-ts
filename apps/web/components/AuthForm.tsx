@@ -167,7 +167,6 @@ const AuthForm = ({ type }: AuthFormProps) => {
           </p>
         </div>
 
-        {/* Terms */}
         <p className='text-center text-xs text-muted-foreground mt-6'>
           All uptime alerts and notifications will be sent to this email address
         </p>
