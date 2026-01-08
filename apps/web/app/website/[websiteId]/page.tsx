@@ -78,8 +78,6 @@ const WebsitePage = () => {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/website/${websiteId}`,
         { withCredentials: true }
       );
-      console.log('Website data:', res.data.website);
-      console.log('Alerts:', res.data.website.alerts);
       setWebsite(res.data.website);
     } catch {
       toast.error('Failed to fetch website');
