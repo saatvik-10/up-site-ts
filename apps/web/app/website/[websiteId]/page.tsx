@@ -78,6 +78,8 @@ const WebsitePage = () => {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/website/${websiteId}`,
         { withCredentials: true }
       );
+      console.log('Website data:', res.data.website);
+      console.log('Alerts:', res.data.website.alerts);
       setWebsite(res.data.website);
     } catch {
       toast.error('Failed to fetch website');
@@ -97,7 +99,7 @@ const WebsitePage = () => {
   useEffect(() => {
     if (isAuthenticated) {
       fetchWebsite();
-      const interval = setInterval(fetchWebsite, 4 * 60 * 1000);
+      const interval = setInterval(fetchWebsite, 3.5 * 60 * 1000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated, fetchWebsite]);
@@ -245,6 +247,46 @@ const WebsitePage = () => {
                   {formatDate(latestTick.created_at)}
                 </span>
               </div>
+            </div>
+          </div>
+        )}
+
+        <Separator className='my-8' />
+
+        {website.alerts && website.alerts.length > 0 && (
+          <div className='bg-card border border-border rounded-xl p-5'>
+            <h3 className='text-sm text-muted-foreground mb-4'>
+              Alert History ({website.alerts.length})
+            </h3>
+            <div className='space-y-3'>
+              {website.alerts.map((alert) => (
+                <div
+                  key={alert.id}
+                  className='flex items-center justify-between p-3 bg-background rounded-lg border border-border'
+                >
+                  <div className='flex items-center gap-3'>
+                    <div
+                      className={cn(
+                        'w-2.5 h-2.5 rounded-full',
+                        getStatusColor(alert.status)
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        'font-medium',
+                        getStatusTextColor(alert.status)
+                      )}
+                    >
+                      {alert.status === 'Down'
+                        ? 'Website Down'
+                        : 'Website Recovered'}
+                    </span>
+                  </div>
+                  <span className='text-muted-foreground text-sm'>
+                    {formatDate(alert.time_added)}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         )}
