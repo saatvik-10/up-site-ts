@@ -1,5 +1,11 @@
 services:
-  # Database
+  deps:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.deps
+    image: upsite-deps:latest
+    profiles: ["build"]
+
   postgres:
     image: postgres:16-alpine
     environment:
@@ -15,10 +21,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    networks:
-      - app-network
+    networks: [app-network]
 
-  # Redis
   redis:
     image: redis:7-alpine
     volumes:
@@ -30,26 +34,22 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-    networks:
-      - app-network
+    networks: [app-network]
 
-  # Prisma Migrations
   migrator:
+    image: upsite-migrator:latest
     build:
       context: .
       dockerfile: docker/Dockerfile.migrator
     environment:
       DATABASE_URL: ${DATABASE_URL}
-    env_file:
-      - .env
+    env_file: [.env]
     depends_on:
       postgres:
         condition: service_healthy
-    networks:
-      - app-network
+    networks: [app-network]
     restart: "no"
 
-  # Backend Server
   server:
     build:
       context: .
@@ -60,10 +60,8 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       JWT_SECRET: ${JWT_SECRET}
-      PORT: 8080
       NODE_ENV: production
-    env_file:
-      - .env
+    env_file: [.env]
     depends_on:
       postgres:
         condition: service_healthy
@@ -71,11 +69,9 @@ services:
         condition: service_healthy
       migrator:
         condition: service_completed_successfully
-    networks:
-      - app-network
+    networks: [app-network]
     restart: unless-stopped
 
-  # Producer Service
   producer:
     build:
       context: .
@@ -84,20 +80,13 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       NODE_ENV: production
-    env_file:
-      - .env
+    env_file: [.env]
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
       migrator:
         condition: service_completed_successfully
-    networks:
-      - app-network
+    networks: [app-network]
     restart: unless-stopped
 
-  # Consumer Service
   consumer:
     build:
       context: .
@@ -106,20 +95,13 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       NODE_ENV: production
-    env_file:
-      - .env
+    env_file: [.env]
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
       migrator:
         condition: service_completed_successfully
-    networks:
-      - app-network
+    networks: [app-network]
     restart: unless-stopped
 
-  # Notifier Service
   notifier:
     build:
       context: .
@@ -129,20 +111,13 @@ services:
       REDIS_URL: ${REDIS_URL}
       RESEND_API_KEY: ${RESEND_API_KEY}
       NODE_ENV: production
-    env_file:
-      - .env
+    env_file: [.env]
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
       migrator:
         condition: service_completed_successfully
-    networks:
-      - app-network
+    networks: [app-network]
     restart: unless-stopped
 
-  # Alert Worker Service
   alert-worker:
     build:
       context: .
@@ -150,22 +125,14 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
-      RESEND_API_KEY: ${RESEND_API_KEY}
       NODE_ENV: production
-    env_file:
-      - .env
+    env_file: [.env]
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
       migrator:
         condition: service_completed_successfully
-    networks:
-      - app-network
+    networks: [app-network]
     restart: unless-stopped
 
-  # Frontend Web
   web:
     build:
       context: .
@@ -173,14 +140,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080}
-      NODE_ENV: production
-    env_file:
-      - .env
-    depends_on:
-      - server
-    networks:
-      - app-network
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:8080}
+    env_file: [.env]
+    depends_on: [server]
+    networks: [app-network]
     restart: unless-stopped
 
 networks:
