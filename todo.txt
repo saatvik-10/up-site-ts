@@ -1,4 +1,4 @@
-notification history (hv to store in db as well then)
+direct google auth
 
 tutorial section
 
