@@ -66,7 +66,7 @@ const Page = () => {
   useEffect(() => {
     if (isAuthenticated) {
       fetchWebsites();
-      const interval = setInterval(fetchWebsites, 3 * 60 * 1000);
+      const interval = setInterval(fetchWebsites, 3.5 * 60 * 1000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated, fetchWebsites]);

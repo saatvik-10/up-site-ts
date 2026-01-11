@@ -1,5 +1,0 @@
-direct google auth
-
-tutorial section
-
-smething else interesting...
